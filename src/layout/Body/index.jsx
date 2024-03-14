@@ -8,26 +8,26 @@ import { images } from '../../assets/image';
 
 function Body(props) {
 
-    const [listNode, setListNode] = useState(
+    const [listNote, setListNote] = useState(
         [
             {
                 id: 1,
-                content: "node_01",
+                content: "Note_01",
                 title: "todo_01",
             },
             {
                 id: 2,
-                content: "node_02",
+                content: "Note_02",
                 title: "todo_03",
             },
             {
                 id: 3,
-                content: "node_03",
+                content: "Note_03",
                 title: "todo_03",
             },
             {
                 id: 4,
-                content: "node_04",
+                content: "Note_04",
                 title: "todo_04",
             },
         ])
@@ -40,68 +40,64 @@ function Body(props) {
         id: null,
         update: false
     })
-    const [reloadPage, setReloadPage] = useState(false)
-    const handleAddNode = () => {
+    const handleAddNote = () => {
         console.log('run at here', valueList);
-        const newNode = { id: listNode.length + 1, content: valueList.content, title: valueList.title, };
-        setListNode(prevListNode => [...prevListNode, newNode]);
+        const newNote = { id: listNote.length + 1, content: valueList.content, title: valueList.title, };
+        setListNote(prevListNote => [...prevListNote, newNote]);
     };
-    const handleDeleteNode = (id) => {
-        const updatedListNode = listNode.filter(node => node.id !== id);
-        setListNode(updatedListNode);
+    const handleDeleteNote = (id) => {
+        const updatedListNote = listNote.filter(Note => Note.id !== id);
+        setListNote(updatedListNote);
     }
-    const handleUpdateNode = (id) => {
-
-        const updatedListNode = listNode.map(node => {
-            if (node.id === id) {
-                const updateNode = { ...node, content: valueUpdate }
-                return { ...node, updateNode };
+    const handleUpdateNote = (id) => {
+        console.log('check value update ::::: ', valueUpdate)
+        const updatedListNote = listNote.map(Note => {
+            if (Note.id === id) {
+                const updateNote = { ...Note, content: valueUpdate }
+                return updateNote;
             }
-            return node;
+            return Note;
         });
-
-        console.log('kdjfd', updatedListNode)
-        // Cập nhật trạng thái của mảng node bằng mảng mới đã được cập nhật
-        setListNode(() => [...updatedListNode]);
+        setListNote(() => updatedListNote);
         setIsUpdate({ ...isUpdate, id: null, update: false })
 
     }
     return (
         <View style={styles.container}>
-            <Text>{listNode.length}</Text>
-            <Text style={styles.header}>Node</Text>
+            <Text style={styles.header}>Note</Text>
             <View style={styles.inputComment}>
                 <TextInput placeholder="Nhap title" onChange={(e) => { setValueList({ ...valueList, title: e.target.value }) }}
                     style={{ flex: 1, backgroundColor: 'yellow', padding: 10 }} />
                 <TextInput placeholder="Nhap content" onChange={(e) => { setValueList({ ...valueList, content: e.target.value }) }}
                     style={{ flex: 1, backgroundColor: 'yellow', padding: 10 }} />
-                <TouchableOpacity onPress={() => handleAddNode()} >
+                <TouchableOpacity onPress={() => handleAddNote()} >
                     <Text style={{ fontSize: '30px', fontWeight: 'bold', textAlign: 'center', padding: '20px', backgroundColor: 'green' }}>Add</Text>
-                </TouchableOpacity> :
+                </TouchableOpacity>
             </View>
-            <Text style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', padding: '20px' }}>List Node</Text>
+            <Text style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', padding: '20px' }}>List Note</Text>
             <ScrollView style={{ width: '100%', height: 200, display: 'flex', gap: '20px' }}>
 
-                {listNode.map((item) => (
-                    <View style={styles.listItem}>
+                {listNote.map((item) => (
+                    <View key={item.id} style={styles.listItem}>
                         <View>
                             <Text style={{ fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}> {item.title}</Text>
-                            {(isUpdate.update && isUpdate.id === item.id) ? <TextInput onChange={() => setValueUpdate(e.target.value)} /> : <Text>{item.content}</Text>}
+                            {(isUpdate.update && isUpdate.id === item.id) ? <TextInput onChange={(e) => setValueUpdate(e.target.value)} /> : <Text>{item.content}</Text>}
                         </View>
                         <View style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-                            {!isUpdate.update ?
+                            {isUpdate.update && isUpdate.id === item.id ?
+                                <TouchableOpacity onPress={() => handleUpdateNote(item.id)}>
+                                    <ArrowUpOnSquareIcon />
+                                </TouchableOpacity>
+                                :
                                 <TouchableOpacity onPress={() => setIsUpdate({ ...isUpdate, id: item.id, update: true })}>
                                     <PencilSquareIcon onPress={() => setIsUpdate({ ...isUpdate, id: item.id, update: true })} />
                                 </TouchableOpacity>
 
-                                :
-                                <TouchableOpacity onPress={() => handleUpdateNode(item.id)}>
-                                    <ArrowUpOnSquareIcon />
-                                </TouchableOpacity>
+
 
                             }
 
-                            <TouchableOpacity onPress={() => handleDeleteNode(item.id)}>
+                            <TouchableOpacity onPress={() => handleDeleteNote(item.id)}>
                                 <TrashIcon />
                             </TouchableOpacity>
                         </View>
